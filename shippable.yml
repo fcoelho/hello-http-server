@@ -1,0 +1,13 @@
+build:
+  post_ci:
+    - docker build -t $AWS_ECR_REPO:latest .
+    - docker push $AWS_ECR_REPO:latest
+
+integrations:
+  hub:
+    - integrationName: iam-shippable
+      region: sa-east-1
+      type: ecr
+
+env:
+  - secure: cSl/Ae8DJX8EG3FNL6eFusyEGWYqvEiA0d0XrAK1r+8obiR+dPx3gOB1VnM6bN1EaVqnQ2atAcjtrLSJp1d3Bfu4JDII9CVbpMFodG9r+XJA3l0i+AiYbgR7cdF3lKnOpKn4sSaQl00pRDDuXmMuRnduAcd1r8iUw7MCZmA52uCou1POyzBq8AtX4SAtBJ4wzfWJmw3MwfOjouAnNJpUJXgQbAoTwYnz9hMloiJ9XN6rGQIp7zl6fkWxitFd/elflKptSTCvO3T04TAnF8yLpcylL9q/eWj9cQmiaR6NV+GA3XTUi3ul88XwzC5hPSnFapQeAJOdyRjumannaL1Gdg==
