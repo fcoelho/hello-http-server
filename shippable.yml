@@ -1,3 +1,5 @@
+language: none
+
 build:
   post_ci:
     - docker build -t $AWS_ECR_REPO:latest .
