@@ -2,8 +2,8 @@ language: none
 
 build:
   post_ci:
-    - docker build -t $AWS_ECR_REPO:latest .
-    - docker push $AWS_ECR_REPO:latest
+    - docker build -t $AWS_ECR_REPO:${GIT_TAG_NAME:-latest} .
+    - docker push $AWS_ECR_REPO:${GIT_TAG_NAME:-latest}
 
 integrations:
   hub:
