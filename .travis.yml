@@ -1,0 +1,24 @@
+# vim: set ts=2 sts=2 sw=2 et:
+
+sudo: required
+language: python
+services:
+  - docker
+install:
+  - pip install awscli
+script:
+  - eval $(aws ecr get-login --region $AWS_ECR_REGION --no-include-email)
+  - docker build . -t $AWS_ECR_REPO:latest
+  - docker build . -t $AWS_ECR_REPO:$TRAVIS_COMMIT
+  - test -z "$TRAVIS_TAG" || docker build . -t $AWS_ECR_REPO:$TRAVIS_TAG
+  - docker push $AWS_ECR_REPO:latest
+  - docker push $AWS_ECR_REPO:$TRAVIS_COMMIT
+  - test -z "$TRAVIS_TAG" || docker push $AWS_ECR_REPO:$TRAVIS_TAG
+env:
+  global:
+    - secure: 55fysTsNOPPMd6uvI8FWkou0ZOTZiKEP1Jbk5IMvZo2ld7OT7kfLy2TRxf4qcSFPw22PB2byPdxPg99uVa0DNULAcS3QXMJF/IcBwAofxHWEc18d8+Pqu7liLMNIr28UcqHaOZJInE1b1+P3GzTwCwkiXXiK92G+0ym7Qjta5LVrN1yaI7mzYwPRxsoti0DpiRLd9G0d4OBA0M46OEMazimUlYyBVsiI5HBYdvDgxfMyz4IAQGO+Bn05u4jAZDWpR9J5GdHCuK6jeLLcoYl1ozqqI5TnRMXEpvZWP4DRypZzhuYTITjTOy4CmDzJaM1kHZ4kutn8cKJNSIJj32/Lc4F8+NzWvb6W4kpwf9i6RrUloc8ISokEpe0mGlGLl2yZQ9ZNJtQ8/cy3ps/nKGwFx5g5HhehsbWcEwm5UpPGMTpCACPwHvJvREgsMvWaDAPGiWnkKjUvCty+VdOrk3UkaYZHCPRfuBUszaqHArJWOE+Wr1nsgaL+4OJCi6IWFs72fj1DoruUV0trB+qJb/ScEoDHm1Fsp7+7lPDLlyIXL29KRsNqoChTRz/DDmlYiTmRY0G63haoUQAxvoHAL/oUyiKIXsTHUx5eG2hTuFFcV2IkKWnd5Lp3doXs4gawzoqsqLKhKQZAecRBJQWt6+/K6DWV7giEMeNX+mWMelOhPL8=
+    - secure: aGvaBTiepJ05XuQqvLvl0CawUgfTC7/EejKWYHTZOVRVve9WEQKuxRrEn0lRan73ueLxIvNj7fVbwzoX1DHal2Gjxca61RwP5j6wqvkIbhtiIBslvfauuPHjuMmFuZpepCskwglb/TWAXRE4ULQ3nNdMGmJsRUsj64BLSaQ8RkK4g7Jt2pqtr2iH9XmVMZ4qd1tGZYbc0XtMlrVO0Upbosv1D3QuguCeO9j1ixUf7Hs8wN4h8kYX6yghTJzm0tr+JVKv7NfH/mhg/0c67Hpu7U2tewknOLaDYebzCr5HsQ45B5a05CFr3O78lg0Clx/1ChI83Ao/4w5igS/7CoAJv9OtpsQYkP9N5W/mEv/u3GsYaZXoB/k30hgdVwp2E/Ro1EepBjQHDy0yjYmZspAqhyvpMBtJENDlodrq6w8zKz8WvxkD7gF1SOTrYhzONKwJ3QC6lj4wno1eT0rbg+st6IVyI92HrgpcQgDm7mGl3S7fhuTebl2XTdKWyiQ3s8hX3mIouAO3Ruf+whtAXmW8s+A+05niyJ6AebUzcHg4VTxxArBJor79zcJbvcCH1f1wsbBZ2WZ6yci+nDKhqlxe6N8m9il6yXq7h2GA54D/0FQIJUc329l4/44wJpqAodG7dHlA3Aa6/LRBo9x8lzeNF2ISSqBy150PcBz+Glu89Hs=
+    - secure: P1WLr9oDEtp4vx+CzZTgOlEPCsdJy2wInMFW9vupYRUPqd9ZnyHnx/ZstSyIBzhzM/T6DCOXB8CVz+jRM27KLrtuXrYBaTzXSQlXhGyqr5IwvD1RDu80xzebWlu+qZtaEqQBoVYvyjbzxxi6FA8YJc64dxpE55ucq6gIG5Y/Wd4XwLrZABBXqRr4F8zM/b6hgxhBWLhRwv8qhp9ksSUcGYETjqvyuIlLPkxBLHkoqurw+oQ3Nb26z9/aRpMQlozgRVhu9Zv9IkWy4/O4nDQ6GssCNF7iqrqoGf8/ZWlHiXlPmi21WcinBbh2woKlZX2tRXnsOjKO/9XolEb2KYWbtJDfWtmAh2Ykf1etyQbrxKTSfIVsnopNTFRnjgp9o3+lkLZ6x4ZatYQ0+62IJOe/M3mX9l8LFlpkt7gwBokGSsVQdTXr/Dl1gYpsqPaagzYYv4XlVjMzE0LaNJyY7MNzRdCiN5f6rWqvoq4qU2HWbEotYvGHZmS5h+P7csy54VQA+BpGxgHObePU1P/QEc4qESbRpmUuqc3lFqwRGsOCqWBo/GwnhABnzkrti77IC0bxdkt+JX09rorheU/Ab2PAmsYLcOVFCSpkflaDp6cjKAig77pgUoKiEu4fTYjsYI0xRf1j05fhrAAZn7xu7vziy+X1NoENAM9DZbL3wqHsfxA=
+cache:
+  directories:
+    - "$HOME/.cache/pip"
