@@ -8,7 +8,7 @@ import (
 
 func main() {
 	handler := func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, "v82\n")
+		io.WriteString(w, "v83\n")
 	}
 
 	http.HandleFunc("/", handler)
